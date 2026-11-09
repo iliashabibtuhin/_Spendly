@@ -1,0 +1,80 @@
+// Spendly data model.
+// Money is stored as integer minor units (poisha, 1/100 of a taka) to avoid
+// floating-point rounding errors. The API converts to/from major units.
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "esm"
+}
+
+// The connection URL lives in prisma.config.ts (CLI) and src/lib/prisma.js
+// (runtime driver adapter), both read from DATABASE_URL.
+datasource db {
+  provider = "postgresql"
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+model User {
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  passwordHash String
+  currency     String        @default("BDT")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  categories   Category[]
+  transactions Transaction[]
+  budgets      Budget[]
+}
+
+model Category {
+  id           String          @id @default(cuid())
+  name         String
+  type         TransactionType
+  color        String          @default("#6366F1")
+  icon         String          @default("tag")
+  isDefault    Boolean         @default(false)
+  userId       String
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@unique([userId, type, name])
+  @@index([userId, type])
+}
+
+model Transaction {
+  id          String          @id @default(cuid())
+  amount      Int // minor units, always positive; sign comes from `type`
+  type        TransactionType
+  description String          @default("")
+  date        DateTime // stored as UTC midnight of the calendar day
+  categoryId  String
+  category    Category        @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  userId      String
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([userId, date])
+  @@index([userId, type, date])
+  @@index([categoryId])
+}
+
+model Budget {
+  id        String   @id @default(cuid())
+  month     String // "YYYY-MM"
+  amount    Int // minor units
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, month])
+}

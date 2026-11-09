@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+
+# Environment files (real values / credentials). Only the templates are committed.
+.env
+.env.*
+!.env.example
+
+# Build output
+dist/
+dist-ssr/
+
+# Generated Prisma client (rebuilt by `npm install` via postinstall)
+server/src/generated/
+
+# Local SQLite databases (private data; the pre-Postgres dev.db is shared separately, if at all)
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# Platform CLIs
+.vercel/
+.render/
+
+# Logs and OS / editor files
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Claude Code personal settings
+.claude/settings.local.json
