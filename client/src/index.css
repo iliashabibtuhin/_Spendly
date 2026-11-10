@@ -1,0 +1,92 @@
+@import "tailwindcss";
+@import "@fontsource-variable/manrope";
+/* Manrope has no taka sign (৳); this supplies it via per-glyph fallback. */
+@import "@fontsource-variable/noto-sans-bengali";
+
+@theme {
+  --font-sans: "Manrope Variable", "Noto Sans Bengali Variable", ui-sans-serif, system-ui, sans-serif;
+
+  /* Spendly palette */
+  --color-canvas: #f5f5fa;
+  --color-ink: #1c1a3a;
+  --color-ink-soft: #5b5a78;
+  --color-ink-faint: #8e8da8;
+  --color-line: #e7e6f0;
+
+  --color-brand-50: #eef0ff;
+  --color-brand-100: #e0e3ff;
+  --color-brand-200: #c6caff;
+  --color-brand-500: #6366f1;
+  --color-brand-600: #4f46e5;
+  --color-brand-700: #4338ca;
+  --color-brand-900: #26206b;
+
+  --color-income: #0e9f6e;
+  --color-income-soft: #e3f6ee;
+  --color-expense: #e5484d;
+  --color-expense-soft: #fdebec;
+  --color-warn: #d97706;
+  --color-warn-soft: #fef3e2;
+
+  --shadow-card: 0 1px 2px rgb(28 26 58 / 0.04), 0 4px 16px -8px rgb(28 26 58 / 0.08);
+  --shadow-pop: 0 12px 40px -12px rgb(28 26 58 / 0.25);
+  --shadow-brand: 0 10px 24px -10px rgb(79 70 229 / 0.55);
+
+  --animate-dialog-in: dialog-in 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-sheet-in: sheet-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-fade-in: fade-in 160ms ease-out;
+  --animate-shimmer: shimmer 1.4s ease-in-out infinite;
+
+  @keyframes dialog-in {
+    from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  }
+  @keyframes sheet-in {
+    from { transform: translateY(100%); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+  }
+  @keyframes shimmer {
+    50% { opacity: 0.55; }
+  }
+}
+
+@layer base {
+  html {
+    color: var(--color-ink);
+    background: var(--color-canvas);
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    font-feature-settings: "tnum" 1;
+  }
+  h1, h2, h3 {
+    letter-spacing: -0.015em;
+  }
+  dialog::backdrop {
+    animation: var(--animate-fade-in);
+  }
+  /* Custom chevron on <select> so it matches across browsers. */
+  select {
+    appearance: none;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand-500);
+    outline-offset: 2px;
+  }
+  /* Native date picker icon tint */
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="month"]::-webkit-calendar-picker-indicator {
+    opacity: 0.55;
+    cursor: pointer;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
